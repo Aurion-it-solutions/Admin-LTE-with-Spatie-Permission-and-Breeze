@@ -4,6 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title') | {{ config('app.name') }}</title>
+    <script>
+            (function() {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            })();
+    </script>
+
   @push('styles')
 <style>
 .custom-alert {
@@ -71,7 +80,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     @endif
-    
+
     @if(session('error'))
       <div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
           <strong>❌ Error!</strong> {{ session('error') }}
