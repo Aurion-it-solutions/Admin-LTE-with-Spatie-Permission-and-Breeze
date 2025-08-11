@@ -14,6 +14,7 @@
     </script>
 
   @push('styles')
+  
 <style>
 .custom-alert {
     position: fixed;
