@@ -5,17 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>@yield('title') | {{ config('app.name') }}</title>
 
-<!-- Theme switch -->
-<script>
-(function() {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark') {
-        document.documentElement.classList.add('dark-mode');
-        document.body.classList.add('dark-mode');
-    }
-})();
-</script>
-
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" rel="stylesheet">
 
@@ -31,6 +20,8 @@
 <link rel="stylesheet" href="{{ asset('lte3/plugins/jqvmap/jqvmap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('lte3/plugins/daterangepicker/daterangepicker.css') }}">
 <link rel="stylesheet" href="{{ asset('lte3/plugins/summernote/summernote-bs4.min.css') }}">
+
+<!-- DataTables CSS -->
 <link rel="stylesheet" href="{{ asset('lte3/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('lte3/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('lte3/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
@@ -40,70 +31,83 @@
 @stack('styles')
 
 <style>
-    /* Flex layout to push footer down */
-    html, body {
-        height: 100%;
-    }
-
-    .wrapper {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
-
-    .content-wrapper {
-        flex: 1;
-    }
-
-    /* Custom alert animation */
-    .custom-alert {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1050;
-        animation: slideInRight 0.6s ease-out;
-    }
-
-    @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
+html, body { height: 100%; }
+.wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+.content-wrapper { flex: 1; }
+.custom-alert { position: fixed; top: 20px; right: 20px; z-index: 1050; animation: slideInRight 0.6s ease-out; }
+@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+/* Dark mode extras */
+body.dark-mode { background-color: #1e1e2d !important; }
+body.dark-mode .main-header { background-color: #1f2937 !important; }
+body.dark-mode .main-sidebar { background-color: #111827 !important; }
+body.dark-mode .content-wrapper { background-color: #1e1e2d !important; color: #e5e7eb !important; }
+body.dark-mode .main-header .nav-link, body.dark-mode .main-sidebar a { color: #d1d5db !important; }
 </style>
+
+<script>
+// Apply dark/light mode instantly without flicker
+(function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const body = document.body;
+
+    if(savedTheme === 'dark') body.classList.add('dark-mode');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const navbar = document.getElementById('mainNavbar');
+        const sidebar = document.getElementById('mainSidebar');
+        const icon = document.getElementById('darkModeIcon');
+
+        function applyTheme(theme) {
+            if(theme === 'dark') {
+                body.classList.add('dark-mode');
+                icon.className = 'fas fa-sun';
+                navbar?.classList.remove('navbar-white','navbar-light');
+                navbar?.classList.add('navbar-dark');
+                sidebar?.classList.remove('sidebar-light-primary');
+                sidebar?.classList.add('sidebar-dark-primary');
+            } else {
+                body.classList.remove('dark-mode');
+                icon.className = 'fas fa-moon';
+                navbar?.classList.remove('navbar-dark');
+                navbar?.classList.add('navbar-white','navbar-light');
+                sidebar?.classList.remove('sidebar-dark-primary');
+                sidebar?.classList.add('sidebar-light-primary');
+            }
+        }
+
+        applyTheme(savedTheme);
+
+        const toggle = document.getElementById('darkModeToggle');
+        toggle?.addEventListener('click', e => {
+            e.preventDefault();
+            const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+    });
+})();
+</script>
+
 </head>
-
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
-
 <div class="wrapper">
 
-    {{-- Navbar --}}
     @include('admin.layouts.navbar')
-
-    {{-- Sidebar --}}
     @include('admin.layouts.sidebar')
 
-    {{-- Content Wrapper --}}
     <div class="content-wrapper">
-
-        {{-- Page Header --}}
         @include('admin.layouts.page-header')
-
-        {{-- Main Content --}}
         <section class="content">
             <div class="container-fluid">
                 @yield('small-boxes')
                 @yield('content')
             </div>
         </section>
+    </div>
 
-    </div> {{-- End content-wrapper --}}
-
-    {{-- Footer --}}
     @include('admin.layouts.footer')
-
-    {{-- Control Sidebar --}}
     <aside class="control-sidebar control-sidebar-dark"></aside>
-
-</div> {{-- End wrapper --}}
+</div>
 
 <!-- JS Files -->
 <script src="{{ asset('lte3/plugins/jquery/jquery.min.js') }}"></script>
@@ -112,19 +116,7 @@
 <script src="{{ asset('lte3/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('lte3/dist/js/adminlte.js') }}"></script>
 
-<!-- Optional Plugins -->
-<script src="{{ asset('lte3/plugins/chart.js/Chart.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/sparklines/sparkline.js') }}"></script>
-<script src="{{ asset('lte3/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-<script src="{{ asset('lte3/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/moment/moment.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/daterangepicker/daterangepicker.js') }}"></script>
-<script src="{{ asset('lte3/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/summernote/summernote-bs4.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-
-<!-- DataTables -->
+<!-- DataTables JS -->
 <script src="{{ asset('lte3/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('lte3/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('lte3/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -137,19 +129,7 @@
 <script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-<script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
-<script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
-
-<!-- Auto-close Alerts -->
-<script>
-setTimeout(() => {
-    document.querySelectorAll('.alert').forEach(el => {
-        new bootstrap.Alert(el).close();
-    });
-}, 8000);
-</script>
 
 @stack('scripts')
-
 </body>
 </html>
