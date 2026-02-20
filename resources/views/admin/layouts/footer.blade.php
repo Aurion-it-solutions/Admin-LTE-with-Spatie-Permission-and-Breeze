@@ -1,7 +1,9 @@
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
+<footer class="main-footer">
+    <div class="float-left d-none d-sm-inline-block">
+        <strong>&copy; {{ now()->year }} <a href="https://adminlte.io" target="_blank">AdminLTE.io</a>.</strong>
+        All rights reserved.
     </div>
-  </footer>
+    <div class="float-right d-none d-sm-inline-block">
+        <b>Version</b> 4.0.0
+    </div>
+</footer>

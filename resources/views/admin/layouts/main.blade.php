@@ -8,35 +8,19 @@
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" rel="stylesheet">
 
-<!-- CSS Files -->
-<link rel="stylesheet" href="{{ asset('lte3/plugins/fontawesome-free/css/all.min.css') }}">
-<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-<link rel="stylesheet" href="{{ asset('lte3/dist/css/adminlte.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/jqvmap/jqvmap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/daterangepicker/daterangepicker.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/summernote/summernote-bs4.min.css') }}">
+<!-- AdminLTE v4 CSS (all-in-one) -->
+<link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.rtl.min.css') }}"> <!-- optional RTL -->
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="{{ asset('lte3/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('lte3/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.6.2/css/colReorder.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
-
+<!-- Custom styles -->
 @stack('styles')
-
 <style>
 html, body { height: 100%; }
 .wrapper { display: flex; flex-direction: column; min-height: 100vh; }
 .content-wrapper { flex: 1; }
 .custom-alert { position: fixed; top: 20px; right: 20px; z-index: 1050; animation: slideInRight 0.6s ease-out; }
 @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-/* Dark mode extras */
+/* Dark mode */
 body.dark-mode { background-color: #1e1e2d !important; }
 body.dark-mode .main-header { background-color: #1f2937 !important; }
 body.dark-mode .main-sidebar { background-color: #111827 !important; }
@@ -45,45 +29,35 @@ body.dark-mode .main-header .nav-link, body.dark-mode .main-sidebar a { color: #
 </style>
 
 <script>
-// Apply dark/light mode instantly without flicker
 (function() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
     const body = document.body;
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const navbar = document.getElementById('mainNavbar');
+    const sidebar = document.getElementById('mainSidebar');
+    const icon = document.getElementById('darkModeIcon');
+    const toggle = document.getElementById('darkModeToggle');
 
-    if(savedTheme === 'dark') body.classList.add('dark-mode');
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const navbar = document.getElementById('mainNavbar');
-        const sidebar = document.getElementById('mainSidebar');
-        const icon = document.getElementById('darkModeIcon');
-
-        function applyTheme(theme) {
-            if(theme === 'dark') {
-                body.classList.add('dark-mode');
-                icon.className = 'fas fa-sun';
-                navbar?.classList.remove('navbar-white','navbar-light');
-                navbar?.classList.add('navbar-dark');
-                sidebar?.classList.remove('sidebar-light-primary');
-                sidebar?.classList.add('sidebar-dark-primary');
-            } else {
-                body.classList.remove('dark-mode');
-                icon.className = 'fas fa-moon';
-                navbar?.classList.remove('navbar-dark');
-                navbar?.classList.add('navbar-white','navbar-light');
-                sidebar?.classList.remove('sidebar-dark-primary');
-                sidebar?.classList.add('sidebar-light-primary');
-            }
+    function applyTheme(theme) {
+        if(theme === 'dark') {
+            body.classList.add('dark-mode');
+            icon && (icon.className = 'fas fa-sun');
+            navbar?.classList.replace('navbar-white','navbar-dark');
+            sidebar?.classList.replace('sidebar-light-primary','sidebar-dark-primary');
+        } else {
+            body.classList.remove('dark-mode');
+            icon && (icon.className = 'fas fa-moon');
+            navbar?.classList.replace('navbar-dark','navbar-white');
+            sidebar?.classList.replace('sidebar-dark-primary','sidebar-light-primary');
         }
+    }
 
-        applyTheme(savedTheme);
+    applyTheme(savedTheme);
 
-        const toggle = document.getElementById('darkModeToggle');
-        toggle?.addEventListener('click', e => {
-            e.preventDefault();
-            const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
-        });
+    toggle?.addEventListener('click', e => {
+        e.preventDefault();
+        const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
     });
 })();
 </script>
@@ -109,26 +83,8 @@ body.dark-mode .main-header .nav-link, body.dark-mode .main-sidebar a { color: #
     <aside class="control-sidebar control-sidebar-dark"></aside>
 </div>
 
-<!-- JS Files -->
-<script src="{{ asset('lte3/plugins/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-<script> $.widget.bridge('uibutton', $.ui.button); </script>
-<script src="{{ asset('lte3/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('lte3/dist/js/adminlte.js') }}"></script>
-
-<!-- DataTables JS -->
-<script src="{{ asset('lte3/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/pdfmake/pdfmake.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/pdfmake/vfs_fonts.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-<script src="{{ asset('lte3/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<!-- AdminLTE v4 JS -->
+<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
 
 @stack('scripts')
 </body>
