@@ -17,90 +17,35 @@
                 <i id="darkModeIcon" class="fas fa-moon"></i>
             </a>
         </li>
+
+        <!-- User Dropdown Menu -->
+        <li class="nav-item dropdown user-menu">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <img src="{{ \Laravolt\Avatar\Facade::create(Auth::user()->name ?? 'Guest')->toBase64() }}" class="user-image img-circle elevation-2" alt="User Image">
+                <span class="d-none d-md-inline">{{ Auth::user()->name ?? 'Guest' }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <!-- User image -->
+                <li class="user-header bg-primary">
+                    <img src="{{ \Laravolt\Avatar\Facade::create(Auth::user()->name ?? 'Guest')->toBase64() }}" class="img-circle elevation-2" alt="User Image">
+                    <p>
+                        {{ Auth::user()->name ?? 'Guest' }}
+                        <small>Member since {{ Auth::user()->created_at->format('M. Y') ?? 'N/A' }}</small>
+                    </p>
+                </li>
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                    <a href="{{ route('profile.edit') }}" class="btn btn-default btn-flat">Profile</a>
+                    <a href="#" class="btn btn-default btn-flat float-right"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Sign out
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
+            </ul>
+        </li>
     </ul>
 </nav>
 <!-- /.navbar -->
-
-<!-- Example Sidebar -->
-<aside id="mainSidebar" class="main-sidebar sidebar-light-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="#" class="brand-link">
-        <span class="brand-text font-weight-light">My MIS</span>
-    </a>
-</aside>
-
-<style>
-/* Extra Dark Mode Styling */
-body.dark-mode {
-    background-color: #1e1e2d !important;
-}
-
-body.dark-mode .main-header {
-    background-color: #1f2937 !important;
-    color: #fff !important;
-}
-
-body.dark-mode .main-header .nav-link {
-    color: #d1d5db !important;
-}
-
-body.dark-mode .main-sidebar {
-    background-color: #111827 !important;
-    color: #d1d5db !important;
-}
-
-body.dark-mode .main-sidebar a {
-    color: #d1d5db !important;
-}
-
-body.dark-mode .content-wrapper {
-    background-color: #1e1e2d !important;
-    color: #e5e7eb !important;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const toggle = document.getElementById('darkModeToggle');
-    const icon = document.getElementById('darkModeIcon');
-    const navbar = document.getElementById('mainNavbar');
-    const sidebar = document.getElementById('mainSidebar');
-
-    function applyTheme(theme) {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark-mode');
-            icon.classList.replace('fa-moon', 'fa-sun');
-
-            // Switch Navbar to Dark
-            navbar.classList.remove('navbar-white', 'navbar-light');
-            navbar.classList.add('navbar-dark');
-
-            // Switch Sidebar to Dark
-            sidebar.classList.remove('sidebar-light-primary');
-            sidebar.classList.add('sidebar-dark-primary');
-        } else {
-            document.body.classList.remove('dark-mode');
-            icon.classList.replace('fa-sun', 'fa-moon');
-
-            // Switch Navbar to Light
-            navbar.classList.remove('navbar-dark');
-            navbar.classList.add('navbar-white', 'navbar-light');
-
-            // Switch Sidebar to Light
-            sidebar.classList.remove('sidebar-dark-primary');
-            sidebar.classList.add('sidebar-light-primary');
-        }
-    }
-
-    // Apply stored theme on load
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
-
-    toggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
-        localStorage.setItem('theme', newTheme);
-        applyTheme(newTheme);
-    });
-});
-</script>

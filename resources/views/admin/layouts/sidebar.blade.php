@@ -55,6 +55,15 @@
                 </li>
                 @endcan
 
+
+                {{-- Logout --}}
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
     </div>
